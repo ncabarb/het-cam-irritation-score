@@ -52,17 +52,32 @@
             font-weight: bold;
             text-align: center;
         }
+
+        /* Nota de rodapé científica */
+        .footer {
+            margin-top: 40px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 11px;
+            color: #555;
+            text-align: justify;
+            line-height: 1.4;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 
 <body>
+
 <div class="container">
     <h1>HET-CAM Irritation Score</h1>
 
     <!-- Hemorrhage -->
     <label>
         Hemorrhage time (sec)
-        <input type="number" id="secH" placeholder="Seconds">
+        <input type="number" id="secH" min="0" max="300" placeholder="Seconds">
         <div class="checkbox">
             <input type="checkbox" id="noH"> Event not observed
         </div>
@@ -71,7 +86,7 @@
     <!-- Lysis -->
     <label>
         Lysis time (sec)
-        <input type="number" id="secL" placeholder="Seconds">
+        <input type="number" id="secL" min="0" max="300" placeholder="Seconds">
         <div class="checkbox">
             <input type="checkbox" id="noL"> Event not observed
         </div>
@@ -80,7 +95,7 @@
     <!-- Coagulation -->
     <label>
         Coagulation time (sec)
-        <input type="number" id="secC" placeholder="Seconds">
+        <input type="number" id="secC" min="0" max="300" placeholder="Seconds">
         <div class="checkbox">
             <input type="checkbox" id="noC"> Event not observed
         </div>
@@ -91,53 +106,65 @@
     <div class="result" id="result"></div>
     <div class="result" id="classification"></div>
 </div>
- <div class="footer">
-    If you use this tool, please cite:<br>
-Cavalcante, N. (2026). Web-based calculator for HET-CAM irritation score.
-LIMA, N.C.B. (2026). Web-based calculator for HET-CAM irritation score.
-Adapted from Luepke (1985).
-    Developed by Natália Cavalcante – PhD Student in Pharmacology, University Federal of Ceará - UFC.
-    <p>
-This tool performs deterministic calculations and does not store or modify
-user data. All computations occur locally in the user's browser.
-</p>
 
-   
-  </div>
+<!-- Nota de rodapé -->
+<div class="footer">
+    <p><strong>If you use this tool, please cite:</strong></p>
+
+    <p>
+        Cavalcante, N. (2026). <em>Web-based calculator for HET-CAM irritation score</em>.
+        Adapted from Luepke (1985). Developed by Natália Cavalcante – PhD Student in
+        Pharmacology, Federal University of Ceará (UFC).
+    </p>
+
+    <p>
+        This tool performs deterministic calculations and does not store or modify
+        user data. All computations occur locally in the user's browser. This
+        calculator is intended as a supportive analytical tool and does not replace
+        the HET-CAM experimental assay. Results should be interpreted in conjunction
+        with experimental observations and expert judgment.
+    </p>
+</div>
+
 <script>
     function calculateIS() {
 
-        // Se o evento não foi observado, o tempo vira 301
-        let secH = document.getElementById("noH").checked
-            ? 301
-            : Number(document.getElementById("secH").value);
+        // Se o evento não foi observado, contribuição = 0
+        let IS = 0;
 
-        let secL = document.getElementById("noL").checked
-            ? 301
-            : Number(document.getElementById("secL").value);
+        if (!document.getElementById("noH").checked) {
+            let secH = Number(document.getElementById("secH").value);
+            if (!isNaN(secH)) {
+                IS += 5 * ((300 - secH) / 300);
+            }
+        }
 
-        let secC = document.getElementById("noC").checked
-            ? 301
-            : Number(document.getElementById("secC").value);
+        if (!document.getElementById("noL").checked) {
+            let secL = Number(document.getElementById("secL").value);
+            if (!isNaN(secL)) {
+                IS += 7 * ((300 - secL) / 300);
+            }
+        }
 
-        // Cálculo do Irritation Score
-        let IS =
-            5 * ((301 - secH) / 300) +
-            7 * ((301 - secL) / 300) +
-            9 * ((301 - secC) / 300);
+        if (!document.getElementById("noC").checked) {
+            let secC = Number(document.getElementById("secC").value);
+            if (!isNaN(secC)) {
+                IS += 9 * ((300 - secC) / 300);
+            }
+        }
 
         IS = IS.toFixed(2);
 
         // Classificação automática
         let classification = "";
 
-        if (IS >= 0 && IS <= 0.9) {
+        if (IS < 1) {
             classification = "Non-irritant (N.I.)";
-        } else if (IS >= 1.0 && IS <= 4.9) {
+        } else if (IS < 5) {
             classification = "Slight irritant (I.L.)";
-        } else if (IS >= 5.0 && IS <= 8.9) {
+        } else if (IS < 9) {
             classification = "Moderate irritant (I.M.)";
-        } else if (IS >= 9.0) {
+        } else {
             classification = "Severe irritant (I.S.)";
         }
 
@@ -148,8 +175,6 @@ user data. All computations occur locally in the user's browser.
             "Classification: " + classification;
     }
 </script>
+
 </body>
 </html>
-
-
-
