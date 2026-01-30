@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HET-CAM Irritation Score Calculator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .checkbox {
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+	.footer {
+    margin-top: 30px;
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+}
+
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>HET-CAM Irritation Score</h1>
+
+    <!-- Hemorrhage -->
+    <label>
+        Hemorrhage time (sec)
+        <input type="number" id="secH" placeholder="Seconds">
+        <div class="checkbox">
+            <input type="checkbox" id="noH"> Event not observed
+        </div>
+    </label>
+
+    <!-- Lysis -->
+    <label>
+        Lysis time (sec)
+        <input type="number" id="secL" placeholder="Seconds">
+        <div class="checkbox">
+            <input type="checkbox" id="noL"> Event not observed
+        </div>
+    </label>
+
+    <!-- Coagulation -->
+    <label>
+        Coagulation time (sec)
+        <input type="number" id="secC" placeholder="Seconds">
+        <div class="checkbox">
+            <input type="checkbox" id="noC"> Event not observed
+        </div>
+    </label>
+
+    <button onclick="calculateIS()">Calculate IS</button>
+
+    <div class="result" id="result"></div>
+    <div class="result" id="classification"></div>
+	<div class="footer">
+    Adapted from Luepke, 1985.<br>
+    Developed by Natália Cavalcante – PhD candidate in Pharmacology, Federal University of Ceará (UFC).
+</div>
+
+</div>
+
+<script>
+    function calculateIS() {
+
+        // Se o evento não foi observado, o tempo vira 301
+        let secH = document.getElementById("noH").checked
+            ? 301
+            : Number(document.getElementById("secH").value);
+
+        let secL = document.getElementById("noL").checked
+            ? 301
+            : Number(document.getElementById("secL").value);
+
+        let secC = document.getElementById("noC").checked
+            ? 301
+            : Number(document.getElementById("secC").value);
+
+        // Cálculo do Irritation Score
+        let IS =
+            5 * ((301 - secH) / 300) +
+            7 * ((301 - secL) / 300) +
+            9 * ((301 - secC) / 300);
+
+        IS = IS.toFixed(2);
+
+        // Classificação automática
+        let classification = "";
+
+        if (IS >= 0 && IS <= 0.9) {
+            classification = "Non-irritant (N.I.)";
+        } else if (IS >= 1.0 && IS <= 4.9) {
+            classification = "Slight irritant (I.L.)";
+        } else if (IS >= 5.0 && IS <= 8.9) {
+            classification = "Moderate irritant (I.M.)";
+        } else if (IS >= 9.0) {
+            classification = "Severe irritant (I.S.)";
+        }
+
+        document.getElementById("result").innerHTML =
+            "Irritation Score (IS): " + IS;
+
+        document.getElementById("classification").innerHTML =
+            "Classification: " + classification;
+    }
+</script>
+</body>
+</html>
