@@ -1,5 +1,6 @@
 # HET-CAM Irritation Score Calculator
 
+Original methodology described by Luepke (1985).
 Web-based calculator for the HET-CAM (Hen’s Egg Test – Chorioallantoic Membrane) irritation score.
 
 This tool was developed to assist in the calculation and classification of irritation potential based on vascular reactions observed in the HET-CAM assay, following the methodology originally described by Luepke (1985).
