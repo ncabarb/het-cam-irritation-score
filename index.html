@@ -1,212 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>HET-CAM Irritation Score Calculator</title>
+    <meta charset="UTF-8">
+    <title>HET-CAM Irritation Score Calculator</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      padding: 30px;
-    }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 40px;
+        }
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+        .container {
+            max-width: 550px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
 
-    h1 {
-      text-align: center;
-    }
+        h1 {
+            text-align: center;
+        }
 
-    label {
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
-    }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
 
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-    }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
 
-    input[type="checkbox"] {
-      margin-top: 10px;
-    }
+        .checkbox {
+            margin-top: 5px;
+        }
 
-    button {
-      margin-top: 30px;
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      background: #4a90e2;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-    button:hover {
-      background: #357abd;
-    }
-
-    .result {
-      margin-top: 30px;
-      padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .non-irritant {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .slightly-irritant {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .moderately-irritant {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    .severely-irritant {
-      background: #f5c6cb;
-      color: #491217;
-    }
-
-    .footer {
-      margin-top: 30px;
-      font-size: 12px;
-      color: #555;
-      text-align: center;
-    }
-  </style>
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
-
 <div class="container">
-  <h1>HET-CAM Irritation Score Calculator</h1>
+    <h1>HET-CAM Irritation Score</h1>
 
-  <!-- Hemorrhage -->
-  <label>
-    Hemorrhage time (H, seconds)
-    <input type="number" id="hTime" placeholder="Seconds">
-    <br>
-    <input type="checkbox" id="hNone" onchange="toggleInput('hTime', this)">
-    Event not observed
-  </label>
+    <!-- Hemorrhage -->
+    <label>
+        Hemorrhage time (sec)
+        <input type="number" id="secH" placeholder="Seconds">
+        <div class="checkbox">
+            <input type="checkbox" id="noH"> Event not observed
+        </div>
+    </label>
 
-  <!-- Coagulation -->
-  <label>
-    Coagulation time (C, seconds)
-    <input type="number" id="cTime" placeholder="Seconds">
-    <br>
-    <input type="checkbox" id="cNone" onchange="toggleInput('cTime', this)">
-    Event not observed
-  </label>
+    <!-- Lysis -->
+    <label>
+        Lysis time (sec)
+        <input type="number" id="secL" placeholder="Seconds">
+        <div class="checkbox">
+            <input type="checkbox" id="noL"> Event not observed
+        </div>
+    </label>
 
-  <!-- Lysis -->
-  <label>
-    Lysis time (L, seconds)
-    <input type="number" id="lTime" placeholder="Seconds">
-    <br>
-    <input type="checkbox" id="lNone" onchange="toggleInput('lTime', this)">
-    Event not observed
-  </label>
+    <!-- Coagulation -->
+    <label>
+        Coagulation time (sec)
+        <input type="number" id="secC" placeholder="Seconds">
+        <div class="checkbox">
+            <input type="checkbox" id="noC"> Event not observed
+        </div>
+    </label>
 
-  <button onclick="calculateIS()">Calculate IS</button>
+    <button onclick="calculateIS()">Calculate IS</button>
 
-  <!-- Result -->
-  <div id="resultBox" class="result hidden">
-    <h2>Irritation Score (IS)</h2>
-    <p id="isValue">–</p>
-    <p id="classification">–</p>
-  </div>
-
-  <div class="footer">
-    <p>
-      Adapted from Luepke (1985).<br>
-      Developed by Natália Cavalcante – PhD Student in Pharmacology, Federal University of Ceará (UFC).
-    </p>
-    <p>
-      This tool performs deterministic calculations and does not store or modify user data.
-      All computations occur locally in the user's browser.
-    </p>
-    <p>
-      This calculator is intended solely as a computational aid for data interpretation and
-      does not replace the experimental execution of the HET-CAM assay.
-    </p>
-  </div>
+    <div class="result" id="result"></div>
+    <div class="result" id="classification"></div>
 </div>
+<div class="footer">
+    Adapted from Luepke (1985) DOI: 10.1016/0278-6915(85)90030-4.<br>
+    Developed by Natália Cavalcante – PhD Student in Pharmacology, UFC.<br><br>
 
+    If you use this tool, please cite:<br>
+    LIMA, N.C.B. (2026). Web-based calculator for HET-CAM irritation score.
+    Adapted from Luepke (1985). Developed by Natália Cavalcante – PhD Student in
+    Pharmacology, Federal University of Ceará (UFC).<br><br>
+
+    This calculator is intended as a supportive analytical tool and does not
+    replace the HET-CAM experimental assay. Results should be interpreted in
+    conjunction with experimental observations and expert judgment. All
+    calculations are deterministic and performed locally in the user's browser.
+  </div>
 <script>
-  function toggleInput(inputId, checkbox) {
-    const input = document.getElementById(inputId);
-    if (checkbox.checked) {
-      input.value = "";
-      input.disabled = true;
-    } else {
-      input.disabled = false;
+    function calculateIS() {
+
+        // Se o evento não foi observado, o tempo vira 301
+        let secH = document.getElementById("noH").checked
+            ? 301
+            : Number(document.getElementById("secH").value);
+
+        let secL = document.getElementById("noL").checked
+            ? 301
+            : Number(document.getElementById("secL").value);
+
+        let secC = document.getElementById("noC").checked
+            ? 301
+            : Number(document.getElementById("secC").value);
+
+        // Cálculo do Irritation Score
+        let IS =
+            5 * ((301 - secH) / 300) +
+            7 * ((301 - secL) / 300) +
+            9 * ((301 - secC) / 300);
+
+        IS = IS.toFixed(2);
+
+        // Classificação automática
+        let classification = "";
+
+        if (IS >= 0 && IS <= 0.9) {
+            classification = "Non-irritant (N.I.)";
+        } else if (IS >= 1.0 && IS <= 4.9) {
+            classification = "Slight irritant (I.L.)";
+        } else if (IS >= 5.0 && IS <= 8.9) {
+            classification = "Moderate irritant (I.M.)";
+        } else if (IS >= 9.0) {
+            classification = "Severe irritant (I.S.)";
+        }
+
+        document.getElementById("result").innerHTML =
+            "Irritation Score (IS): " + IS;
+
+        document.getElementById("classification").innerHTML =
+            "Classification: " + classification;
     }
-  }
-
-  function calculateIS() {
-    const hNone = document.getElementById("hNone").checked;
-    const cNone = document.getElementById("cNone").checked;
-    const lNone = document.getElementById("lNone").checked;
-
-    const h = hNone ? 300 : Number(document.getElementById("hTime").value);
-    const c = cNone ? 300 : Number(document.getElementById("cTime").value);
-    const l = lNone ? 300 : Number(document.getElementById("lTime").value);
-
-    if ((!hNone && !h) || (!cNone && !c) || (!lNone && !l)) {
-      alert("Please provide the time or mark 'Event not observed'.");
-      return;
-    }
-
-    const IS =
-      ((301 - h) * 5 / 300) +
-      ((301 - c) * 7 / 300) +
-      ((301 - l) * 9 / 300);
-
-    const resultBox = document.getElementById("resultBox");
-    const isValue = document.getElementById("isValue");
-    const classificationText = document.getElementById("classification");
-
-    isValue.textContent = IS.toFixed(2);
-    resultBox.className = "result";
-
-    if (IS < 1) {
-      classificationText.textContent = "Non-irritant";
-      resultBox.classList.add("non-irritant");
-    } else if (IS < 5) {
-      classificationText.textContent = "Slightly irritant";
-      resultBox.classList.add("slightly-irritant");
-    } else if (IS < 9) {
-      classificationText.textContent = "Moderately irritant";
-      resultBox.classList.add("moderately-irritant");
-    } else {
-      classificationText.textContent = "Severely irritant";
-      resultBox.classList.add("severely-irritant");
-    }
-
-    resultBox.classList.remove("hidden");
-  }
 </script>
-
 </body>
 </html>
